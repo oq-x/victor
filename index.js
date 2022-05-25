@@ -4,7 +4,7 @@ import fs from "fs";
 import express from "express";
 import nacl from "tweetnacl";
 import fetch from "node-fetch";
-const oldDate = new Date()
+const oldDate = Date.now()
 import parser from 'body-parser'
 let content;
 try { 
@@ -134,4 +134,4 @@ app.post("/interactions", async function(req, response){
     
     
 })
-console.log(`${'DONE'.green} (${(new Date().getSeconds() - oldDate.getSeconds()).toFixed(1)}s) Victor is running`)
+console.log(`${'DONE'.green} (${(new Date().getSeconds() - new Date(oldDate).getSeconds()).toFixed(2)}s) Victor is running`)
