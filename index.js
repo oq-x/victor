@@ -19,10 +19,11 @@ const config = yml.load(content)
 const app = express()
 try {
     app.listen(config.port)
-    console.log(`${'INFO'.blue} Listening on port ${config.port}`)
 } catch {
     console.log(`${'ERROR'.red} Can't listen on port ${config.port}`)
+    process.exit()
 }
+console.log(`${'INFO'.blue} Listening on port ${config.port}`)
 
 async function request(route, method, body){
     let options = { method, headers: {'Content-Type': 'application/json', "Authorization": `Bot ${config.bot.token}`} }
