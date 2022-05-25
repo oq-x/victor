@@ -1,0 +1,16 @@
+owner: "" # your id
+bot:
+  id: "" # your bot id
+  public_key: "" # your bot public key
+  token: "" # your bot token
+  version: "v10" # dont change this
+port: 80 # the webserver port
+roles: [
+   {
+        name: "", # role name
+        id: "" # role id
+    } # Add more
+]
+embed:
+  content: "Click on the buttons below to get roles!" # embed message
+  color: "0059FF" # embed color
