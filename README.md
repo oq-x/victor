@@ -7,5 +7,5 @@
 5. Stop and run `node .`
 
 ## Setup
-1. Set your bot's interactions url to <ip>:<port>/interactions (Must have SSL)
+1. Set your bot's interactions url to \<ip\>:\<port\>/interactions (Must have SSL)
 2. Use the command /send
