@@ -7,12 +7,14 @@ import fetch from "node-fetch";
 const oldDate = Date.now()
 import parser from 'body-parser'
 let content;
-try { 
-    content = fs.readFileSync('./config.yml', 'utf8')
-    console.log(`${'INFO'.blue} Loaded config`)
-} catch {
-    console.log(`${'ERROR'.red} Can't read file config.yml`)
-    process.exit()
+if(!['-i', '--init'].includes(process.argv[2])){
+    try { 
+        content = fs.readFileSync('./config.yml', 'utf8')
+        console.log(`${'INFO'.blue} Loaded config`)
+    } catch {
+        console.log(`${'ERROR'.red} Can't read file config.yml`)
+        process.exit()
+    }
 }
 const config = yml.load(content)
 
@@ -32,23 +34,50 @@ async function request(route, method, body){
     return data;
 }
 
+if(["-i", "--init"].includes(process.argv[2])){
+    console.log(`${'DEBUG'.yellow} Running with -i flag`)
+    console.log(`${'INFO'.blue} Initializing config`)
+    try {
+        fs.writeFileSync(`./config.yml`, `owner: "" # your id
+bot:
+id: "" # your bot id
+public_key: "" # your bot public key
+token: "" # your bot token
+version: "v10" # dont change this
+port: 80 # the webserver port
+roles: [
+{
+name: "", # role name
+id: "" # role id
+} # Add more
+]
+embed:
+content: "Click on the buttons below to get roles!" # embed message
+color: "0059FF" # embed color`, 'utf8')
+        console.log(`${'INFO'.blue} Created config`)
+        process.exit()
+    } catch {
+        console.log(`${'ERROR'.red} Couldn't create config`)
+        process.exit()
+    }
+}
 if(["-cc", "--create-commands"].includes(process.argv[2])){
     console.log(`${'DEBUG'.yellow} Running with -cc flag`)
     console.log(`${'INFO'.blue} Creating commands`)
     await request(`/applications/${config.bot.id}/commands`, 'put', [
-            {
-                type: 1,
-                name: "send",
-                description: "Send the embed message",
-                options: [{
-                    type: 7,
-                    name: "channel",
-                    description: "The channel to send the message in",
-                    required: true,
-                    channel_types: [0]
-                }]
-            }
-        ])
+        {
+            type: 1,
+            name: "send",
+            description: "Send the embed message",
+            options: [{
+                type: 7,
+                name: "channel",
+                description: "The channel to send the message in",
+                required: true,
+                channel_types: [0]
+            }]
+        }
+    ])
 }
 app.use(parser.json({
     verify: (req, res, buf) => {
@@ -132,7 +161,7 @@ app.post("/interactions", async function(req, response){
         await request(`/channels/${interaction.data.options[0].value}/messages`, 'post', { embeds: [payload], components: [{ type: 1, components: buttons }] })
         await interaction.editReply({ content: "Sent message!" })
     }
-    
-    
+
+
 })
 console.log(`${'DONE'.green} (${(new Date().getSeconds() - new Date(oldDate).getSeconds()).toFixed(2)}s) Victor is running`)
