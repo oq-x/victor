@@ -40,20 +40,20 @@ if(process.argv.includes("-i") || process.argv.includes("--init")){
     try {
         fs.writeFileSync(`./config.yml`, `owner: "" # your id
 bot:
-id: "" # your bot id
-public_key: "" # your bot public key
-token: "" # your bot token
-version: "v10" # dont change this
+  id: "" # your bot id
+  public_key: "" # your bot public key
+  token: "" # your bot token
+  version: "v10" # dont change this
 port: 80 # the webserver port
 roles: [
-{
-name: "", # role name
-id: "" # role id
-} # Add more
+  {
+    name: "", # role name
+    id: "" # role id
+  } # Add more
 ]
 embed:
-content: "Click on the buttons below to get roles!" # embed message
-color: "0059FF" # embed color`, 'utf8')
+  content: "Click on the buttons below to get roles!" # embed message
+  color: "0059FF" # embed color`, 'utf8')
         console.log(`${'INFO'.blue} Created config`)
         process.exit()
     } catch {
