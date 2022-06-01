@@ -7,7 +7,7 @@ import fetch from "node-fetch";
 const oldDate = Date.now()
 import parser from 'body-parser'
 let content;
-if(!['-i', '--init'].includes(process.argv[2])){
+if(!process.argv.includes("-i") && !process.argv.includes("--init")){
     try { 
         content = fs.readFileSync('./config.yml', 'utf8')
         console.log(`${'INFO'.blue} Loaded config`)
@@ -34,7 +34,7 @@ async function request(route, method, body){
     return data;
 }
 
-if(["-i", "--init"].includes(process.argv[2])){
+if(process.argv.includes("-i") || process.argv.includes("--init")){
     console.log(`${'DEBUG'.yellow} Running with -i flag`)
     console.log(`${'INFO'.blue} Initializing config`)
     try {
@@ -61,7 +61,7 @@ color: "0059FF" # embed color`, 'utf8')
         process.exit()
     }
 }
-if(["-cc", "--create-commands"].includes(process.argv[2])){
+if(process.argv.includes("-cc") || process.argv.includes("--create-commands")){
     console.log(`${'DEBUG'.yellow} Running with -cc flag`)
     console.log(`${'INFO'.blue} Creating commands`)
     await request(`/applications/${config.bot.id}/commands`, 'put', [
