@@ -4,8 +4,9 @@ import fs from "fs";
 import express from "express";
 import nacl from "tweetnacl";
 import fetch from "node-fetch";
-const oldDate = Date.now()
-import parser from 'body-parser'
+const oldDate = Date.now();
+import parser from 'body-parser';
+import https from 'https';
 let content;
 if(!process.argv.includes("-i") && !process.argv.includes("--init")){
     try { 
@@ -16,16 +17,6 @@ if(!process.argv.includes("-i") && !process.argv.includes("--init")){
         process.exit()
     }
 }
-const config = yml.load(content)
-
-const app = express()
-try {
-    app.listen(config.port)
-} catch {
-    console.log(`${'ERROR'.red} Can't listen on port ${config.port}`)
-    process.exit()
-}
-console.log(`${'INFO'.blue} Listening on port ${config.port}`)
 
 async function request(route, method, body){
     let options = { method, headers: {'Content-Type': 'application/json', "Authorization": `Bot ${config.bot.token}`} }
@@ -44,7 +35,11 @@ bot:
   public_key: "" # your bot public key
   token: "" # your bot token
   version: "v10" # dont change this
-port: 80 # the webserver port
+server:
+  port: 80 # the webserver port
+  ssl:
+    key: "key.pem"
+    cert: "cert.pem"
 roles: [
   {
     name: "", # role name
@@ -61,6 +56,19 @@ embed:
         process.exit()
     }
 }
+
+const config = yml.load(content)
+
+const app = express()
+try {
+    https.createServer(config.server.ssl, app).listen(config.server.port, function(){
+        console.log(`${'INFO'.blue} Listening on port ${config.port}`)
+    })
+} catch {
+    console.log(`${'ERROR'.red} Can't listen on port ${config.server.port}`)
+    process.exit()
+}
+
 if(process.argv.includes("-cc") || process.argv.includes("--create-commands")){
     console.log(`${'DEBUG'.yellow} Running with -cc flag`)
     console.log(`${'INFO'.blue} Creating commands`)
