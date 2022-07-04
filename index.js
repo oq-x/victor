@@ -38,8 +38,8 @@ bot:
 server:
   port: 80 # the webserver port
   ssl:
-    key: "key.pem"
-    cert: "cert.pem"
+    key: "key.pem" # your private key location
+    cert: "cert.pem" # your certificate location
 roles: [
   {
     name: "", # role name
